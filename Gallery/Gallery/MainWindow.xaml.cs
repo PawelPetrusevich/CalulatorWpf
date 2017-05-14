@@ -24,6 +24,7 @@ namespace Gallery
     public partial class MainWindow : Window
     {
         string path = null;
+        List<Info> infoFiles = new List<Info>();
         public MainWindow()
         {
             InitializeComponent();
@@ -41,7 +42,11 @@ namespace Gallery
                 var dir = new DirectoryInfo(path);
                 FileInfo[] files = dir.GetFiles("*.jpg");
                 listView.Items.Clear();
-                listView.ItemsSource = files;
+                foreach (var item in files)
+                {
+                    infoFiles.Add(new Info() { Name = item.Name, FullName = item.FullName });
+                }
+                listView.ItemsSource = infoFiles;
                 listView.DisplayMemberPath = "FullName";
             }
         }
@@ -50,7 +55,7 @@ namespace Gallery
         {
             BitmapImage bmp = new BitmapImage();
             bmp.BeginInit();
-            bmp.UriSource = new Uri(listView.SelectedItem.ToString());
+            bmp.UriSource = new Uri(((Info)listView.SelectedItem).FullName.ToString());
             bmp.EndInit();
             im_userImage.Source = bmp;
 
